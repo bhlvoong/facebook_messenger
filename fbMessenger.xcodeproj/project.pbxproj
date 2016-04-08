@@ -12,6 +12,11 @@
 		C7747B811CAF451200A8B1DA /* fbMessenger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7747B7F1CAF451200A8B1DA /* fbMessenger.xcdatamodeld */; };
 		C7747B831CAF451200A8B1DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7747B821CAF451200A8B1DA /* Assets.xcassets */; };
 		C7747B861CAF451200A8B1DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7747B841CAF451200A8B1DA /* LaunchScreen.storyboard */; };
+		C7F0C3F51CB33A8C00B5E380 /* FriendsControllerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0C3F41CB33A8C00B5E380 /* FriendsControllerHelper.swift */; };
+		C7F0C3FA1CB33B7D00B5E380 /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0C3F61CB33B7D00B5E380 /* Message+CoreDataProperties.swift */; };
+		C7F0C3FB1CB33B7D00B5E380 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0C3F71CB33B7D00B5E380 /* Message.swift */; };
+		C7F0C3FC1CB33B7D00B5E380 /* Friend+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0C3F81CB33B7D00B5E380 /* Friend+CoreDataProperties.swift */; };
+		C7F0C3FD1CB33B7D00B5E380 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0C3F91CB33B7D00B5E380 /* Friend.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +27,11 @@
 		C7747B821CAF451200A8B1DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C7747B851CAF451200A8B1DA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C7747B871CAF451200A8B1DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C7F0C3F41CB33A8C00B5E380 /* FriendsControllerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsControllerHelper.swift; sourceTree = "<group>"; };
+		C7F0C3F61CB33B7D00B5E380 /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C7F0C3F71CB33B7D00B5E380 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		C7F0C3F81CB33B7D00B5E380 /* Friend+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C7F0C3F91CB33B7D00B5E380 /* Friend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +70,11 @@
 				C7747B841CAF451200A8B1DA /* LaunchScreen.storyboard */,
 				C7747B871CAF451200A8B1DA /* Info.plist */,
 				C7747B7F1CAF451200A8B1DA /* fbMessenger.xcdatamodeld */,
+				C7F0C3F41CB33A8C00B5E380 /* FriendsControllerHelper.swift */,
+				C7F0C3F61CB33B7D00B5E380 /* Message+CoreDataProperties.swift */,
+				C7F0C3F71CB33B7D00B5E380 /* Message.swift */,
+				C7F0C3F81CB33B7D00B5E380 /* Friend+CoreDataProperties.swift */,
+				C7F0C3F91CB33B7D00B5E380 /* Friend.swift */,
 			);
 			path = fbMessenger;
 			sourceTree = "<group>";
@@ -137,6 +152,11 @@
 				C7747B7B1CAF451200A8B1DA /* ViewController.swift in Sources */,
 				C7747B811CAF451200A8B1DA /* fbMessenger.xcdatamodeld in Sources */,
 				C7747B791CAF451200A8B1DA /* AppDelegate.swift in Sources */,
+				C7F0C3FB1CB33B7D00B5E380 /* Message.swift in Sources */,
+				C7F0C3FA1CB33B7D00B5E380 /* Message+CoreDataProperties.swift in Sources */,
+				C7F0C3F51CB33A8C00B5E380 /* FriendsControllerHelper.swift in Sources */,
+				C7F0C3FC1CB33B7D00B5E380 /* Friend+CoreDataProperties.swift in Sources */,
+				C7F0C3FD1CB33B7D00B5E380 /* Friend.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +298,7 @@
 				C7747B8C1CAF451200A8B1DA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
