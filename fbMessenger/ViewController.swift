@@ -47,6 +47,13 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         return CGSizeMake(view.frame.width, 100)
     }
+    
+    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let layout = UICollectionViewFlowLayout()
+        let controller = ChatLogController(collectionViewLayout: layout)
+        controller.friend = messages?[indexPath.item].friend
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }
 
 class MessageCell: BaseCell {
@@ -190,7 +197,6 @@ class BaseCell: UICollectionViewCell {
     }
     
     func setupViews() {
-        backgroundColor = UIColor.blueColor()
     }
 }
 

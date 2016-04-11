@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C7154C791CB86CB400877DD2 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7154C781CB86CB400877DD2 /* ChatLogController.swift */; };
 		C7747B791CAF451200A8B1DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7747B781CAF451200A8B1DA /* AppDelegate.swift */; };
 		C7747B7B1CAF451200A8B1DA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7747B7A1CAF451200A8B1DA /* ViewController.swift */; };
 		C7747B811CAF451200A8B1DA /* fbMessenger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7747B7F1CAF451200A8B1DA /* fbMessenger.xcdatamodeld */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C7154C781CB86CB400877DD2 /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		C7747B751CAF451200A8B1DA /* fbMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fbMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7747B781CAF451200A8B1DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C7747B7A1CAF451200A8B1DA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				C7F0C3F71CB33B7D00B5E380 /* Message.swift */,
 				C7F0C3F81CB33B7D00B5E380 /* Friend+CoreDataProperties.swift */,
 				C7F0C3F91CB33B7D00B5E380 /* Friend.swift */,
+				C7154C781CB86CB400877DD2 /* ChatLogController.swift */,
 			);
 			path = fbMessenger;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7154C791CB86CB400877DD2 /* ChatLogController.swift in Sources */,
 				C7747B7B1CAF451200A8B1DA /* ViewController.swift in Sources */,
 				C7747B811CAF451200A8B1DA /* fbMessenger.xcdatamodeld in Sources */,
 				C7747B791CAF451200A8B1DA /* AppDelegate.swift in Sources */,
