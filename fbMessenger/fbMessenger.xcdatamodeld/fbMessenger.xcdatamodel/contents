@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="14F1021" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
     <entity name="Friend" representedClassName=".Friend" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="profileImageName" optional="YES" attributeType="String" syncable="YES"/>
@@ -7,11 +7,12 @@
     </entity>
     <entity name="Message" representedClassName=".Message" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="isSender" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="friend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="messages" inverseEntity="Friend" syncable="YES"/>
     </entity>
     <elements>
         <element name="Friend" positionX="-27" positionY="9" width="128" height="88"/>
-        <element name="Message" positionX="205" positionY="252" width="128" height="88"/>
+        <element name="Message" positionX="205" positionY="252" width="128" height="105"/>
     </elements>
 </model>
