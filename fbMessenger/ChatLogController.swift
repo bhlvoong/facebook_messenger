@@ -24,12 +24,97 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     var messages: [Message]?
     
+    let messageInputContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.whiteColor()
+        return view
+    }()
+    
+    let inputTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Enter message..."
+        return textField
+    }()
+    
+    let sendButton: UIButton = {
+        let button = UIButton(type: .System)
+        button.setTitle("Send", forState: .Normal)
+        let titleColor = UIColor(red: 0, green: 137/255, blue: 249/255, alpha: 1)
+        button.setTitleColor(titleColor, forState: .Normal)
+        button.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
+        return button
+    }()
+    
+    var bottomConstraint: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tabBarController?.tabBar.hidden = true
         
         collectionView?.backgroundColor = UIColor.whiteColor()
         
         collectionView?.registerClass(ChatLogMessageCell.self, forCellWithReuseIdentifier: cellId)
+        
+        view.addSubview(messageInputContainerView)
+        view.addConstraintsWithFormat("H:|[v0]|", views: messageInputContainerView)
+        view.addConstraintsWithFormat("V:[v0(48)]", views: messageInputContainerView)
+        
+        bottomConstraint = NSLayoutConstraint(item: messageInputContainerView, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1, constant: 0)
+        view.addConstraint(bottomConstraint!)
+        
+        setupInputComponents()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleKeyboardNotification), name: UIKeyboardWillShowNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleKeyboardNotification), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func handleKeyboardNotification(notification: NSNotification) {
+        
+        if let userInfo = notification.userInfo {
+            
+            let keyboardFrame = userInfo[UIKeyboardFrameEndUserInfoKey]?.CGRectValue()
+            print(keyboardFrame)
+            
+            let isKeyboardShowing = notification.name == UIKeyboardWillShowNotification
+            
+            bottomConstraint?.constant = isKeyboardShowing ? -keyboardFrame!.height : 0
+            
+            UIView.animateWithDuration(0, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { 
+                
+                self.view.layoutIfNeeded()
+                
+                }, completion: { (completed) in
+                    
+                    if isKeyboardShowing {
+                        let indexPath = NSIndexPath(forItem: self.messages!.count - 1, inSection: 0)
+                        self.collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+                    }
+                    
+            })
+        }
+    }
+    
+    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        inputTextField.endEditing(true)
+    }
+    
+    private func setupInputComponents() {
+        let topBorderView = UIView()
+        topBorderView.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        
+        messageInputContainerView.addSubview(inputTextField)
+        messageInputContainerView.addSubview(sendButton)
+        messageInputContainerView.addSubview(topBorderView)
+        
+        messageInputContainerView.addConstraintsWithFormat("H:|-8-[v0][v1(60)]|", views: inputTextField, sendButton)
+        
+        messageInputContainerView.addConstraintsWithFormat("V:|[v0]|", views: inputTextField)
+        messageInputContainerView.addConstraintsWithFormat("V:|[v0]|", views: sendButton)
+        
+        messageInputContainerView.addConstraintsWithFormat("H:|[v0]|", views: topBorderView)
+        messageInputContainerView.addConstraintsWithFormat("V:|[v0(0.5)]", views: topBorderView)
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
