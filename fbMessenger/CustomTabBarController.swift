@@ -23,7 +23,7 @@ class CustomTabBarController: UITabBarController {
         viewControllers = [recentMessagesNavController, createDummyNavControllerWithTitle("Calls", imageName: "calls"), createDummyNavControllerWithTitle("Groups", imageName: "groups"), createDummyNavControllerWithTitle("People", imageName: "people"), createDummyNavControllerWithTitle("Settings", imageName: "settings")]
     }
     
-    private func createDummyNavControllerWithTitle(title: String, imageName: String) -> UINavigationController {
+    fileprivate func createDummyNavControllerWithTitle(_ title: String, imageName: String) -> UINavigationController {
         let viewController = UIViewController()
         let navController = UINavigationController(rootViewController: viewController)
         navController.tabBarItem.title = title

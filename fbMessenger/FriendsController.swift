@@ -11,33 +11,33 @@ import CoreData
 
 class FriendsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
     
-    private let cellId = "cellId"
+    fileprivate let cellId = "cellId"
     
 //    var messages: [Message]?
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
-        let fetchRequest = NSFetchRequest(entityName: "Friend")
+    lazy var fetchedResultsController: NSFetchedResultsController<Friend> = {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Friend")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "lastMessage.date", ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "lastMessage != nil")
-        let context = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let context = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         frc.delegate = self
-        return frc
+        return frc as! NSFetchedResultsController<Friend>
     }()
     
     
     
-    var blockOperations = [NSBlockOperation]()
+    var blockOperations = [BlockOperation]()
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        if type == .Insert {
-            blockOperations.append(NSBlockOperation(block: {
-                self.collectionView?.insertItemsAtIndexPaths([newIndexPath!])
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        if type == .insert {
+            blockOperations.append(BlockOperation(block: {
+                self.collectionView?.insertItems(at: [newIndexPath!])
             }))
         }
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         collectionView?.performBatchUpdates({
             
             for operation in self.blockOperations {
@@ -47,27 +47,28 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
             }, completion: { (completed) in
                 
                 let lastItem = self.fetchedResultsController.sections![0].numberOfObjects - 1
-                let indexPath = NSIndexPath(forItem: lastItem, inSection: 0)
-                self.collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+                let indexPath = IndexPath(item: lastItem, section: 0)
+                self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                 
         })
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tabBarController?.tabBar.hidden = false
+        tabBarController?.tabBar.isHidden = false
+        collectionView?.reloadData()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent"
-        collectionView?.backgroundColor = UIColor.redColor()
+        collectionView?.backgroundColor = UIColor.red
 
-        collectionView?.backgroundColor = UIColor.whiteColor()
+        collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
         
-        collectionView?.registerClass(MessageCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(MessageCell.self, forCellWithReuseIdentifier: cellId)
         
         setupData()
         
@@ -77,50 +78,52 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
             print(err)
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add Mark", style: .Plain, target: self, action: #selector(addMark))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add Mark", style: .plain, target: self, action: #selector(addMark))
     }
     
     func addMark() {
-        let context = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-        let mark = NSEntityDescription.insertNewObjectForEntityForName("Friend", inManagedObjectContext: context) as! Friend
+        let context = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+        let mark = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
         mark.name = "Mark Zuckerberg"
         mark.profileImageName = "zuckprofile"
         
         FriendsController.createMessageWithText("Hello, my name is Mark. Nice to meet you...", friend: mark, minutesAgo: 0, context: context)
         
-        let bill = NSEntityDescription.insertNewObjectForEntityForName("Friend", inManagedObjectContext: context) as! Friend
+        let bill = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
         bill.name = "Bill Gates"
         bill.profileImageName = "bill_gates_profile"
         
         FriendsController.createMessageWithText("Hello, I like Windows very much.", friend: bill, minutesAgo: 0, context: context)
     }
     
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let count = fetchedResultsController.sections?[section].numberOfObjects {
             return count
         }
         return 0
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellId, forIndexPath: indexPath) as! MessageCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MessageCell
         
-        let friend = fetchedResultsController.objectAtIndexPath(indexPath) as! Friend
+        let friend = fetchedResultsController.object(at: indexPath) as! Friend
+        
+        let f = friend.lastMessage?.friend
         
         cell.message = friend.lastMessage
         
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(view.frame.width, 100)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 100)
     }
     
-    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let layout = UICollectionViewFlowLayout()
         let controller = ChatLogController(collectionViewLayout: layout)
         
-        let friend = fetchedResultsController.objectAtIndexPath(indexPath) as! Friend
+        let friend = fetchedResultsController.object(at: indexPath) as! Friend
         
         controller.friend = friend
         navigationController?.pushViewController(controller, animated: true)
@@ -129,12 +132,12 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
 
 class MessageCell: BaseCell {
     
-    override var highlighted: Bool {
+    override var isHighlighted: Bool {
         didSet {
-            backgroundColor = highlighted ? UIColor(red: 0, green: 134/255, blue: 249/255, alpha: 1) : UIColor.whiteColor()
-            nameLabel.textColor = highlighted ? UIColor.whiteColor() : UIColor.blackColor()
-            timeLabel.textColor = highlighted ? UIColor.whiteColor() : UIColor.blackColor()
-            messageLabel.textColor = highlighted ? UIColor.whiteColor() : UIColor.blackColor()
+            backgroundColor = isHighlighted ? UIColor(red: 0, green: 134/255, blue: 249/255, alpha: 1) : UIColor.white
+            nameLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+            timeLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+            messageLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
         }
     }
     
@@ -151,12 +154,12 @@ class MessageCell: BaseCell {
             
             if let date = message?.date {
                 
-                let dateFormatter = NSDateFormatter()
+                let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "h:mm a"
                 
-                let elapsedTimeInSeconds = NSDate().timeIntervalSinceDate(date)
+                let elapsedTimeInSeconds = Date().timeIntervalSince(date as Date)
                 
-                let secondInDays: NSTimeInterval = 60 * 60 * 24
+                let secondInDays: TimeInterval = 60 * 60 * 24
                 
                 if elapsedTimeInSeconds > 7 * secondInDays {
                     dateFormatter.dateFormat = "MM/dd/yy"
@@ -164,7 +167,7 @@ class MessageCell: BaseCell {
                     dateFormatter.dateFormat = "EEE"
                 }
                 
-                timeLabel.text = dateFormatter.stringFromDate(date)
+                timeLabel.text = dateFormatter.string(from: date as Date)
             }
             
         }
@@ -172,7 +175,7 @@ class MessageCell: BaseCell {
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .ScaleAspectFill
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 34
         imageView.layer.masksToBounds = true
         return imageView
@@ -187,29 +190,29 @@ class MessageCell: BaseCell {
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Mark Zuckerberg"
-        label.font = UIFont.systemFontOfSize(18)
+        label.font = UIFont.systemFont(ofSize: 18)
         return label
     }()
     
     let messageLabel: UILabel = {
         let label = UILabel()
         label.text = "Your friend's message and something else..."
-        label.textColor = UIColor.darkGrayColor()
-        label.font = UIFont.systemFontOfSize(14)
+        label.textColor = UIColor.darkGray
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
     let timeLabel: UILabel = {
         let label = UILabel()
         label.text = "12:05 pm"
-        label.font = UIFont.systemFontOfSize(16)
-        label.textAlignment = .Right
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textAlignment = .right
         return label
     }()
     
     let hasReadImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .ScaleAspectFill
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 10
         imageView.layer.masksToBounds = true
         return imageView
@@ -228,19 +231,19 @@ class MessageCell: BaseCell {
         addConstraintsWithFormat("H:|-12-[v0(68)]", views: profileImageView)
         addConstraintsWithFormat("V:[v0(68)]", views: profileImageView)
         
-        addConstraint(NSLayoutConstraint(item: profileImageView, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: profileImageView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
         
         addConstraintsWithFormat("H:|-82-[v0]|", views: dividerLineView)
         addConstraintsWithFormat("V:[v0(1)]|", views: dividerLineView)
     }
     
-    private func setupContainerView() {
+    fileprivate func setupContainerView() {
         let containerView = UIView()
         addSubview(containerView)
         
         addConstraintsWithFormat("H:|-90-[v0]|", views: containerView)
         addConstraintsWithFormat("V:[v0(50)]", views: containerView)
-        addConstraint(NSLayoutConstraint(item: containerView, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: containerView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
         
         containerView.addSubview(nameLabel)
         containerView.addSubview(messageLabel)
@@ -262,16 +265,16 @@ class MessageCell: BaseCell {
 
 extension UIView {
     
-    func addConstraintsWithFormat(format: String, views: UIView...) {
+    func addConstraintsWithFormat(_ format: String, views: UIView...) {
         
         var viewsDictionary = [String: UIView]()
-        for (index, view) in views.enumerate() {
+        for (index, view) in views.enumerated() {
             let key = "v\(index)"
             viewsDictionary[key] = view
             view.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
     }
     
 }

@@ -13,7 +13,7 @@ import CoreData
 extension FriendsController {
     
     func clearData() {
-        let delegate = UIApplication.sharedApplication().delegate as? AppDelegate
+        let delegate = UIApplication.shared.delegate as? AppDelegate
         
         if let context = delegate?.managedObjectContext {
             
@@ -22,12 +22,12 @@ extension FriendsController {
                 let entityNames = ["Friend", "Message"]
                 
                 for entityName in entityNames {
-                    let fetchRequest = NSFetchRequest(entityName: entityName)
+                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
                     
-                    let objects = try(context.executeFetchRequest(fetchRequest)) as? [NSManagedObject]
+                    let objects = try(context.fetch(fetchRequest)) as? [NSManagedObject]
                     
                     for object in objects! {
-                        context.deleteObject(object)
+                        context.delete(object)
                     }
                 }
                 
@@ -45,25 +45,25 @@ extension FriendsController {
         
         clearData()
         
-        let delegate = UIApplication.sharedApplication().delegate as? AppDelegate
+        let delegate = UIApplication.shared.delegate as? AppDelegate
         
         if let context = delegate?.managedObjectContext {
             
             createSteveMessagesWithContext(context)
             
-            let donald = NSEntityDescription.insertNewObjectForEntityForName("Friend", inManagedObjectContext: context) as! Friend
+            let donald = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
             donald.name = "Donald Trump"
             donald.profileImageName = "donald_trump_profile"
             
             FriendsController.createMessageWithText("You're fired", friend: donald, minutesAgo: 5, context: context)
             
-            let gandhi = NSEntityDescription.insertNewObjectForEntityForName("Friend", inManagedObjectContext: context) as! Friend
+            let gandhi = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
             gandhi.name = "Mahatma Gandhi"
             gandhi.profileImageName = "gandhi"
             
             FriendsController.createMessageWithText("Love, Peace, and Joy", friend: gandhi, minutesAgo: 60 * 24, context: context)
             
-            let hillary = NSEntityDescription.insertNewObjectForEntityForName("Friend", inManagedObjectContext: context) as! Friend
+            let hillary = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
             hillary.name = "Hillary Clinton"
             hillary.profileImageName = "hillary_profile"
             
@@ -79,8 +79,8 @@ extension FriendsController {
         
     }
     
-    private func createSteveMessagesWithContext(context: NSManagedObjectContext) {
-        let steve = NSEntityDescription.insertNewObjectForEntityForName("Friend", inManagedObjectContext: context) as! Friend
+    fileprivate func createSteveMessagesWithContext(_ context: NSManagedObjectContext) {
+        let steve = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
         steve.name = "Steve Jobs"
         steve.profileImageName = "steve_profile"
         
@@ -96,12 +96,12 @@ extension FriendsController {
         FriendsController.createMessageWithText("Absolutely, I'll just use my gigantic iPhone 6 Plus until then!!!", friend: steve, minutesAgo: 1, context: context, isSender: true)
     }
     
-    static func createMessageWithText(text: String, friend: Friend, minutesAgo: Double, context: NSManagedObjectContext, isSender: Bool = false) -> Message {
-        let message = NSEntityDescription.insertNewObjectForEntityForName("Message", inManagedObjectContext: context) as! Message
+    static func createMessageWithText(_ text: String, friend: Friend, minutesAgo: Double, context: NSManagedObjectContext, isSender: Bool = false) -> Message {
+        let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
         message.friend = friend
         message.text = text
-        message.date = NSDate().dateByAddingTimeInterval(-minutesAgo * 60)
-        message.isSender = NSNumber(bool: isSender)
+        message.date = Date().addingTimeInterval(-minutesAgo * 60)
+        message.isSender = NSNumber(value: isSender as Bool)
         
         friend.lastMessage = message
         
